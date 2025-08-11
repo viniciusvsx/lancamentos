@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro Tipo de Cobrança</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: #f5f7fa;
+      padding: 20px;
+    }
+    .form-section {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="form-section">
+    <h2 class="mb-4 text-center"><i class="bi bi-cash-stack"></i> Cadastro Tipo de Cobrança</h2>
+    <form id="tipoCobrancaForm" class="needs-validation" novalidate>
+
+      <div class="mb-3">
+        <label for="tipo_cobranca" class="form-label">Tipo de Cobrança</label>
+        <select id="tipo_cobranca" name="tipo_cobranca" class="form-select" required>
+          <option value="">Selecione...</option>
+          <option value="fixa">Fixa</option>
+          <option value="por_tempo">Por Tempo</option>
+          <option value="por_servico">Por Serviço</option>
+        </select>
+        <div class="invalid-feedback">Selecione um tipo de cobrança.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="tempo" class="form-label">Tempo (horas)</label>
+        <input type="number" id="tempo" name="tempo" class="form-control" min="0" step="0.1" placeholder="Ex: 1.5" required />
+        <div class="invalid-feedback">Informe o tempo em horas.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <input type="text" id="descricao" name="descricao" class="form-control" maxlength="150" placeholder="Descrição do tipo de cobrança" required />
+        <div class="invalid-feedback">Informe a descrição.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="observacao" class="form-label">Observação</label>
+        <textarea id="observacao" name="observacao" class="form-control" rows="3" placeholder="Observações adicionais"></textarea>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-check-circle"></i> Salvar Tipo de Cobrança
+        </button>
+        <button type="reset" class="btn btn-secondary btn-lg ms-2">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Bootstrap JS + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    (function () {
+      'use strict'
+
+      const form = document.getElementById('tipoCobrancaForm');
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          event.preventDefault();
+          alert('Tipo de cobrança salvo com sucesso! (implementar backend)');
+          form.reset();
+          form.classList.remove('was-validated');
+          return;
+        }
+        form.classList.add('was-validated');
+      }, false);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro de Serviço</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: #f5f7fa;
+      padding: 20px;
+    }
+    .form-section {
+      background: #fff;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="form-section">
+    <h2 class="mb-4 text-center"><i class="bi bi-file-earmark-text"></i> Cadastro de Serviço</h2>
+    <form id="servicoCadastroForm" class="needs-validation" novalidate>
+
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição do Serviço</label>
+        <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Digite a descrição do serviço" required minlength="3" maxlength="100" />
+        <div class="invalid-feedback">
+          Por favor, informe a descrição do serviço (mínimo 3 caracteres).
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-check-circle"></i> Cadastrar Serviço
+        </button>
+        <button type="reset" class="btn btn-secondary btn-lg ms-2">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Bootstrap JS + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Validação Bootstrap customizada
+    (function () {
+      'use strict';
+
+      const form = document.getElementById('servicoCadastroForm');
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          event.preventDefault();
+          alert('Serviço cadastrado com sucesso! (implementar backend)');
+          form.reset();
+          form.classList.remove('was-validated');
+          return;
+        }
+        form.classList.add('was-validated');
+      }, false);
+    })();
+  </script>
+</body>
+</html>
