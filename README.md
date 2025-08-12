@@ -73,7 +73,7 @@
   <div class="container">
 
     <header class="header text-center">
-      Sistema de Serviços - Dashboard
+      Dashboard
     </header>
 
     <div class="menu">
