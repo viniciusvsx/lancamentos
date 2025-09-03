@@ -1,557 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CR Transportes - Página Inicial</title>
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-
-  <style>
-    body {
-      background: #f5f7fa;
-      padding: 20px;
-    }
-    .header {
-      background-color: #0d6efd;
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      font-weight: 700;
-      font-size: 1.6rem;
-      box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
-    }
-    .card-title {
-      font-weight: 600;
-      font-size: 1.2rem;
-    }
-    .card-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0d6efd;
-    }
-    .menu {
-      margin-bottom: 30px;
-      text-align: right;
-    }
-    .situacao-atraso {
-      color: #dc3545;
-      font-weight: 700;
-    }
-    .situacao-normal {
-      color: #198754;
-      font-weight: 600;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-    }
-    #prestadoresChecklist {
-      max-height: 120px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    .card-subvalue {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #0d6efd;
-      margin-bottom: 5px;
-    }
-    .card-subvalue span {
-      font-weight: 700;
-      font-size: 1.5rem;
-      margin-left: 5px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CR Transporte - Preferências no Serviço de Bordo</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #6c757d 0%, #495057 100%); padding:20px; }
+.container { max-width:600px; margin:0 auto; background:white; border-radius:15px; box-shadow:0 20px 40px rgba(0,0,0,0.1); overflow:hidden; }
+.header { background: linear-gradient(135deg, #343a40, #495057); color:white; padding:30px; text-align:center; }
+.logo { width:80px; height:80px; margin:0 auto 20px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; border:3px solid #fff; }
+.logo .cr-text { font-size:24px; font-weight:bold; color:#343a40; line-height:1; }
+.logo .transport-text { font-size:8px; color:#343a40; margin-top:2px; }
+.header h1 { font-size:28px; margin-bottom:5px; }
+.header h2 { font-size:20px; margin:10px 0; opacity:0.9; }
+.header p { opacity:0.8; font-size:16px; }
+.form-content { padding:30px; }
+.form-group { margin-bottom:25px; }
+.form-group label { display:block; font-weight:600; margin-bottom:10px; color:#333; font-size:16px; }
+.required { color:#e74c3c; }
+.checkbox-group { display:flex; flex-direction:column; gap:8px; }
+.checkbox-item { display:flex; align-items:center; padding:8px; border-radius:8px; transition: background-color 0.2s; }
+.checkbox-item:hover { background-color:#f8f9fa; }
+.checkbox-item input[type="checkbox"], .checkbox-item input[type="radio"] { margin-right:10px; transform:scale(1.2); }
+.sub-field { margin-left:30px; margin-top:10px; display:none; }
+.sub-field.show { display:block; }
+.sub-field.required-field input { border-color:#e74c3c; }
+.sub-field input { width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:8px; font-size:14px; transition:border-color 0.3s; }
+.sub-field input:focus { outline:none; border-color:#6c757d; }
+textarea { width:100%; min-height:100px; padding:12px; border:2px solid #e0e0e0; border-radius:8px; font-size:14px; resize:vertical; font-family:inherit; transition:border-color 0.3s; }
+textarea:focus { outline:none; border-color:#6c757d; }
+.submit-btn { width:100%; background: linear-gradient(135deg, #343a40, #495057); color:white; padding:15px; border:none; border-radius:10px; font-size:18px; font-weight:600; cursor:pointer; transition: transform 0.2s; }
+.submit-btn:hover { transform: translateY(-2px); }
+.submit-btn:disabled { background:#ccc; cursor:not-allowed; transform:none; }
+.error { color:#e74c3c; font-size:14px; margin-top:5px; display:block; }
+.input-error { border-color:#e74c3c !important; }
+.max-selections { font-size:12px; color:#666; font-style:italic; margin-top:5px; }
+</style>
 </head>
 <body>
+<div class="container">
+<div class="header">
+<div class="logo">
+<div class="cr-text">CR</div>
+<div class="transport-text">TRANSPORTE</div>
+</div>
+<h1>CR TRANSPORTE</h1>
+<h2>Preferências no Serviço de Bordo</h2>
+<p>Preencha suas preferências para uma viagem mais confortável</p>
+</div>
 
-  <div class="container">
+<div class="form-content">
+<!-- Bebidas -->
+<div class="form-group" id="bebidasGroup">
+<label>🥤 Bebidas <span class="required">*</span> <span class="max-selections">(Pode marcar até 2 opções)</span></label>
+<div class="checkbox-group">
+<div class="checkbox-item"><input type="checkbox" id="semBebida" value="Prefiro não receber bebida"><label for="semBebida">Prefiro não receber bebida</label></div>
+<div class="checkbox-item"><input type="checkbox" id="aguaNatural" value="Água natural"><label for="aguaNatural">Água natural</label></div>
+<div class="checkbox-item"><input type="checkbox" id="aguaGas" value="Água com Gás"><label for="aguaGas">Água com Gás</label></div>
+<div class="checkbox-item"><input type="checkbox" id="refrigerante" value="Refrigerante"><label for="refrigerante">Refrigerante</label></div>
+<div class="sub-field" id="refrigeranteSabor"><input type="text" placeholder="Qual sabor?"></div>
+<div class="checkbox-item"><input type="checkbox" id="suco" value="Suco"><label for="suco">Suco</label></div>
+<div class="sub-field" id="sucoSabor"><input type="text" placeholder="Qual sabor?"></div>
+<div class="error" id="bebidasError"></div>
+</div>
+</div>
 
-    <header class="header text-center">
-      Dashboard
-    </header>
+<!-- Petiscos -->
+<div class="form-group" id="petiscosGroup">
+<label>🥜 Petiscos/Snacks <span class="required">*</span> <span class="max-selections">(Escolha até 2 opções)</span></label>
+<div class="checkbox-group">
+<div class="checkbox-item"><input type="checkbox" id="semPetisco" value="Prefiro não receber petiscos"><label for="semPetisco">Prefiro não receber petiscos</label></div>
+<div class="checkbox-item"><input type="checkbox" id="clubeSocial" value="Clube social"><label for="clubeSocial">Clube social</label></div>
+<div class="checkbox-item"><input type="checkbox" id="amendoim" value="Amendoim"><label for="amendoim">Amendoim</label></div>
+<div class="checkbox-item"><input type="checkbox" id="chips" value="Chips"><label for="chips">Chips</label></div>
+<div class="sub-field" id="chipsTipo"><input type="text" placeholder="Qual tipo?"></div>
+<div class="checkbox-item"><input type="checkbox" id="barraCereal" value="Barra de cereal"><label for="barraCereal">Barra de cereal</label></div>
+<div class="error" id="petiscosError"></div>
+</div>
+</div>
 
-    <div class="menu">
-      <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='lancamento.html'">
-        <i class="bi bi-plus-circle"></i> Novo Lançamento
-      </button>
-    </div>
+<!-- Doces -->
+<div class="form-group" id="docesGroup">
+<label>🍬 Doces <span class="required">*</span> <span class="max-selections">(Escolha até 2 opções)</span></label>
+<div class="checkbox-group">
+<div class="checkbox-item"><input type="checkbox" id="semDoce" value="Prefiro não receber doce"><label for="semDoce">Prefiro não receber doce</label></div>
+<div class="checkbox-item"><input type="checkbox" id="jujuba" value="Jujuba"><label for="jujuba">Jujuba</label></div>
+<div class="checkbox-item"><input type="checkbox" id="pacoca" value="Paçoca"><label for="pacoca">Paçoca</label></div>
+<div class="checkbox-item"><input type="checkbox" id="mariola" value="Mariola"><label for="mariola">Mariola</label></div>
+<div class="error" id="docesError"></div>
+</div>
+</div>
 
-    <div class="row g-4 mb-4">
+<!-- Observações -->
+<div class="form-group">
+<label for="observacoes">📝 Observações gerais</label>
+<textarea id="observacoes" placeholder="Alguma observação especial ou preferência adicional..."></textarea>
+</div>
 
-      <div class="col-12 col-md-6">
-        <div class="card shadow-sm rounded">
-          <div class="card-body">
-            <h5 class="card-title">Valores a Receber</h5>
-            <div class="card-subvalue">Total: <span id="valoresReceber">R$ 0,00</span></div>
-            <div class="card-subvalue">Valores para Terceiro: <span id="valoresTerceiro">R$ 0,00</span></div>
-            <div class="card-subvalue">Valor Real: <span id="valorReal">R$ 0,00</span></div>
-            <small class="text-muted">Serviços com vencimento futuro ou no prazo</small>
-          </div>
-        </div>
-      </div>
+<button type="button" class="submit-btn" id="enviarWhats">📱 Enviar para WhatsApp</button>
+</div>
+</div>
 
-      <div class="col-12 col-md-6">
-        <div class="card shadow-sm rounded">
-          <div class="card-body">
-            <h5 class="card-title">Valores em Atraso</h5>
-            <p class="card-text card-value text-danger" id="valoresAtraso">R$ 0,00</p>
-            <small class="text-muted">Serviços com valores vencidos</small>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <section class="mb-4">
-      <h5>Filtros</h5>
-      <form id="filtrosForm" class="row g-3 align-items-end">
-
-        <div class="col-md-3">
-          <label for="dataExecInicio" class="form-label">Data Execução Início</label>
-          <input type="date" id="dataExecInicio" class="form-control" />
-        </div>
-
-        <div class="col-md-3">
-          <label for="dataExecFim" class="form-label">Data Execução Fim</label>
-          <input type="date" id="dataExecFim" class="form-control" />
-        </div>
-
-        <div class="col-md-3">
-          <label for="dataPagtoInicio" class="form-label">Data Pagamento Início</label>
-          <input type="date" id="dataPagtoInicio" class="form-control" />
-        </div>
-
-        <div class="col-md-3">
-          <label for="dataPagtoFim" class="form-label">Data Pagamento Fim</label>
-          <input type="date" id="dataPagtoFim" class="form-control" />
-        </div>
-
-        <div class="col-md-3">
-          <label for="situacaoFiltro" class="form-label">Situação</label>
-          <select id="situacaoFiltro" class="form-select">
-            <option value="todas">Todas</option>
-            <option value="pendente">Pendente</option>
-            <option value="pago">Pago</option>
-            <option value="atraso">Atraso</option>
-          </select>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label d-block">Prestadores</label>
-          <div id="prestadoresChecklist" class="form-check d-flex flex-wrap gap-3">
-            <!-- Checkboxes inseridos via JS -->
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <label for="situacaoRepasseFiltro" class="form-label">Situação do Repasse</label>
-          <select id="situacaoRepasseFiltro" class="form-select">
-            <option value="todas">Todas</option>
-            <option value="sim">Pago</option>
-            <option value="nao">Não Pago</option>
-          </select>
-        </div>
-
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
-          <button type="button" id="btnLimparFiltros" class="btn btn-secondary ms-2">Limpar Filtros</button>
-        </div>
-      </form>
-    </section>
-
-    <section>
-      <h3 class="mb-3">Lançamentos</h3>
-      <div class="table-wrapper">
-        <table class="table table-bordered table-hover align-middle" id="lancamentosTable">
-          <thead class="table-light">
-            <tr>
-              <th>Empresa</th>
-              <th>Data Execução</th>
-              <th>Data Pagamento</th>
-              <th>Situação</th>
-              <th>Prestador</th>
-              <th>Valor de Repasse (R$)</th>
-              <th>Situação do Repasse</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Linhas inseridas por JS -->
-          </tbody>
-        </table>
-      </div>
-
-      <nav aria-label="Paginação dos lançamentos">
-        <ul class="pagination justify-content-center" id="pagination">
-          <!-- Botões inseridos por JS -->
-        </ul>
-      </nav>
-    </section>
-
-  </div>
-
-  <!-- Modal Edição -->
-  <div class="modal fade" id="modalEdicao" tabindex="-1" aria-labelledby="modalEdicaoLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form id="formEdicao" class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalEdicaoLabel">Editar Lançamento</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="indiceEdicao" />
-          <div class="mb-3">
-            <label for="empresaEdicao" class="form-label">Empresa</label>
-            <input type="text" class="form-control" id="empresaEdicao" required />
-          </div>
-          <div class="mb-3">
-            <label for="dataExecucaoEdicao" class="form-label">Data Execução</label>
-            <input type="date" class="form-control" id="dataExecucaoEdicao" required />
-          </div>
-          <div class="mb-3">
-            <label for="dataPagamentoEdicao" class="form-label">Data Pagamento</label>
-            <input type="date" class="form-control" id="dataPagamentoEdicao" required />
-          </div>
-          <div class="mb-3">
-            <label for="situacaoEdicao" class="form-label">Situação</label>
-            <select class="form-select" id="situacaoEdicao" required>
-              <option value="pendente">Pendente</option>
-              <option value="pago">Pago</option>
-              <option value="atraso">Atraso</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Prestador</label>
-            <select class="form-select" id="prestadorEdicao" required>
-              <!-- Opções preenchidas via JS -->
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="valorRepasseEdicao" class="form-label">Valor de Repasse (R$)</label>
-            <input type="number" class="form-control" id="valorRepasseEdicao" step="0.01" min="0" required />
-          </div>
-          <div class="mb-3">
-            <label for="situacaoRepasseEdicao" class="form-label">Situação do Repasse</label>
-            <select class="form-select" id="situacaoRepasseEdicao" required>
-              <option value="sim">Pago</option>
-              <option value="nao">Não Pago</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Bootstrap JS + Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    const lancamentos = [
-      { empresa: 'Empresa 1', data_execucao: '2025-08-20', data_pagamento: '2025-08-25', situacao: 'pendente', prestador: 'Prestador 1', valor_repasse: 1000.00, situacao_repasse: 'nao' },
-      { empresa: 'Empresa 2', data_execucao: '2025-07-30', data_pagamento: '2025-08-01', situacao: 'pago', prestador: 'Prestador 2', valor_repasse: 800.00, situacao_repasse: 'sim' },
-      { empresa: 'Empresa 3', data_execucao: '2025-07-10', data_pagamento: '2025-07-15', situacao: 'atraso', prestador: 'Prestador 3', valor_repasse: 1200.00, situacao_repasse: 'nao' },
-    ];
-
-    for(let i=4; i<=60; i++) {
-      lancamentos.push({
-        empresa: 'Empresa ' + i,
-        data_execucao: `2025-07-${(i%28)+1 < 10 ? '0' + ((i%28)+1) : ((i%28)+1)}`,
-        data_pagamento: `2025-08-${(i%28)+1 < 10 ? '0' + ((i%28)+1) : ((i%28)+1)}`,
-        situacao: i % 3 === 0 ? 'atraso' : (i % 3 === 1 ? 'pendente' : 'pago'),
-        prestador: 'Prestador ' + i,
-        valor_repasse: 500 + i * 10,
-        situacao_repasse: i % 2 === 0 ? 'sim' : 'nao'
-      });
+<script>
+// Subcampos obrigatórios
+function toggleSubField(id){
+    const sub=document.getElementById(id+'Sabor') || document.getElementById('chipsTipo');
+    if(document.getElementById(id).checked){
+        sub.style.display='block';
+        sub.classList.add('required-field');
+    } else {
+        sub.style.display='none';
+        sub.classList.remove('required-field');
+        sub.querySelector('input').value='';
     }
+}
 
-    function formatarData(dataStr) {
-      const d = new Date(dataStr);
-      return d.toLocaleDateString('pt-BR');
-    }
+['refrigerante','suco','chips'].forEach(toggleSubFieldId=>{
+    document.getElementById(toggleSubFieldId).addEventListener('change',()=>toggleSubField(toggleSubFieldId));
+});
 
-    function formatarValor(valor) {
-      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+// Função para controlar grupos
+function controlarGrupo(grupoId,max){
+    const group=document.getElementById(grupoId);
+    const checkboxes=[...group.querySelectorAll('input[type="checkbox"]')];
+    const prefiroNao=checkboxes.find(c=>c.value.includes('Prefiro não'));
 
-    const itensPorPagina = 25;
-    let paginaAtual = 1;
-
-    function montarPrestadoresChecklist() {
-      const container = document.getElementById('prestadoresChecklist');
-      container.innerHTML = '';
-      const prestadores = [...new Set(lancamentos.map(l => l.prestador))].sort();
-
-      prestadores.forEach(prestador => {
-        const id = 'prestador_' + prestador.replace(/\s+/g, '_');
-        const divCheck = document.createElement('div');
-        divCheck.className = 'form-check';
-
-        divCheck.innerHTML = `
-          <input class="form-check-input" type="checkbox" value="${prestador}" id="${id}" checked>
-          <label class="form-check-label" for="${id}">${prestador}</label>
-        `;
-
-        container.appendChild(divCheck);
-      });
-
-      // Preenche select do modal edição
-      const selectPrestador = document.getElementById('prestadorEdicao');
-      selectPrestador.innerHTML = '';
-      prestadores.forEach(prestador => {
-        const option = document.createElement('option');
-        option.value = prestador;
-        option.textContent = prestador;
-        selectPrestador.appendChild(option);
-      });
-    }
-
-    function obterFiltros() {
-      const dataExecInicio = document.getElementById('dataExecInicio').value;
-      const dataExecFim = document.getElementById('dataExecFim').value;
-      const dataPagtoInicio = document.getElementById('dataPagtoInicio').value;
-      const dataPagtoFim = document.getElementById('dataPagtoFim').value;
-      const situacao = document.getElementById('situacaoFiltro').value;
-      const situacaoRepasse = document.getElementById('situacaoRepasseFiltro').value;
-
-      const prestadoresCheckboxes = Array.from(document.querySelectorAll('#prestadoresChecklist input[type="checkbox"]'));
-      const prestadoresSelecionados = prestadoresCheckboxes.filter(c => c.checked).map(c => c.value);
-
-      return {
-        dataExecInicio,
-        dataExecFim,
-        dataPagtoInicio,
-        dataPagtoFim,
-        situacao,
-        situacaoRepasse,
-        prestadoresSelecionados
-      };
-    }
-
-    function filtrarLancamentos() {
-      const filtros = obterFiltros();
-
-      return lancamentos.filter(l => {
-        const dtExec = new Date(l.data_execucao);
-        const dtPagto = new Date(l.data_pagamento);
-
-        if (filtros.dataExecInicio && dtExec < new Date(filtros.dataExecInicio)) return false;
-        if (filtros.dataExecFim && dtExec > new Date(filtros.dataExecFim)) return false;
-
-        if (filtros.dataPagtoInicio && dtPagto < new Date(filtros.dataPagtoInicio)) return false;
-        if (filtros.dataPagtoFim && dtPagto > new Date(filtros.dataPagtoFim)) return false;
-
-        if (filtros.situacao !== 'todas' && l.situacao !== filtros.situacao) return false;
-
-        if (filtros.situacaoRepasse !== 'todas' && l.situacao_repasse !== filtros.situacaoRepasse) return false;
-
-        if (filtros.prestadoresSelecionados.length > 0 && !filtros.prestadoresSelecionados.includes(l.prestador)) return false;
-
-        return true;
-      });
-    }
-
-    function montarTabela(pagina) {
-      paginaAtual = pagina;
-      const tbody = document.querySelector('#lancamentosTable tbody');
-      tbody.innerHTML = '';
-
-      const lancamentosFiltrados = filtrarLancamentos();
-      const totalPaginas = Math.ceil(lancamentosFiltrados.length / itensPorPagina);
-
-      if (paginaAtual > totalPaginas && totalPaginas > 0) paginaAtual = totalPaginas;
-      if (totalPaginas === 0) paginaAtual = 1;
-
-      const inicio = (paginaAtual - 1) * itensPorPagina;
-      const fim = inicio + itensPorPagina;
-      const itensPagina = lancamentosFiltrados.slice(inicio, fim);
-
-      itensPagina.forEach((item) => {
-        const tr = document.createElement('tr');
-
-        let situacaoHtml = '';
-        if (item.situacao === 'atraso') {
-          situacaoHtml = `<span class="situacao-atraso">Atrasado</span>`;
-        } else if (item.situacao === 'pago') {
-          situacaoHtml = `<span class="situacao-normal">Pago</span>`;
-        } else {
-          situacaoHtml = `<span>Pendente</span>`;
-        }
-
-        let situacaoRepasseHtml = '';
-        if (item.situacao_repasse === 'sim') {
-          situacaoRepasseHtml = `<span class="situacao-normal">Pago</span>`;
-        } else {
-          situacaoRepasseHtml = `<span class="situacao-atraso">Não Pago</span>`;
-        }
-
-        tr.innerHTML = `
-          <td>${item.empresa}</td>
-          <td>${formatarData(item.data_execucao)}</td>
-          <td>${formatarData(item.data_pagamento)}</td>
-          <td>${situacaoHtml}</td>
-          <td>${item.prestador}</td>
-          <td>${formatarValor(item.valor_repasse)}</td>
-          <td>${situacaoRepasseHtml}</td>
-          <td>
-            <button type="button" class="btn btn-sm btn-outline-primary" title="Editar lançamento" onclick="abrirModalEdicao(${lancamentos.indexOf(item)})">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-          </td>
-        `;
-
-        tbody.appendChild(tr);
-      });
-
-      montarPaginacao(totalPaginas);
-    }
-
-    function montarPaginacao(totalPaginas) {
-      const ul = document.getElementById('pagination');
-      ul.innerHTML = '';
-
-      const liPrev = document.createElement('li');
-      liPrev.className = 'page-item ' + (paginaAtual === 1 ? 'disabled' : '');
-      liPrev.innerHTML = `<button class="page-link" aria-label="Página anterior" ${paginaAtual === 1 ? 'disabled' : ''}>&laquo;</button>`;
-      liPrev.onclick = () => {
-        if(paginaAtual > 1) montarTabela(paginaAtual - 1);
-      };
-      ul.appendChild(liPrev);
-
-      let inicioPag = Math.max(1, paginaAtual - 2);
-      let fimPag = Math.min(totalPaginas, inicioPag + 4);
-      if(fimPag - inicioPag < 4) {
-        inicioPag = Math.max(1, fimPag - 4);
-      }
-
-      for(let i = inicioPag; i <= fimPag; i++) {
-        const li = document.createElement('li');
-        li.className = 'page-item ' + (i === paginaAtual ? 'active' : '');
-        li.innerHTML = `<button class="page-link">${i}</button>`;
-        li.onclick = () => montarTabela(i);
-        ul.appendChild(li);
-      }
-
-      const liNext = document.createElement('li');
-      liNext.className = 'page-item ' + (paginaAtual === totalPaginas ? 'disabled' : '');
-      liNext.innerHTML = `<button class="page-link" aria-label="Próxima página" ${paginaAtual === totalPaginas ? 'disabled' : ''}>&raquo;</button>`;
-      liNext.onclick = () => {
-        if(paginaAtual < totalPaginas) montarTabela(paginaAtual + 1);
-      };
-      ul.appendChild(liNext);
-    }
-
-    function calcularValores() {
-      const lancamentosFiltrados = filtrarLancamentos();
-      const hoje = new Date();
-
-      let totalReceber = 0;
-      let valorTerceiro = 0;
-      let valorAtraso = 0;
-
-      lancamentosFiltrados.forEach(l => {
-        const dtVencimento = new Date(l.data_pagamento);
-        if (dtVencimento >= hoje && (l.situacao === 'pendente' || l.situacao === 'atraso')) {
-          totalReceber += l.valor_repasse;
-          if (l.prestador === 'Prestador 1') {
-            valorTerceiro += l.valor_repasse;
-          }
-        } else if (dtVencimento < hoje && (l.situacao === 'pendente' || l.situacao === 'atraso')) {
-          valorAtraso += l.valor_repasse;
-        }
-      });
-
-      const valorReal = totalReceber - valorTerceiro;
-
-      document.getElementById('valoresReceber').textContent = formatarValor(totalReceber);
-      document.getElementById('valoresTerceiro').textContent = formatarValor(valorTerceiro);
-      document.getElementById('valorReal').textContent = formatarValor(valorReal);
-      document.getElementById('valoresAtraso').textContent = formatarValor(valorAtraso);
-    }
-
-    function limparFiltros() {
-      document.getElementById('filtrosForm').reset();
-      montarTabela(1);
-      calcularValores();
-    }
-
-    function aplicarFiltros(e) {
-      e.preventDefault();
-      montarTabela(1);
-      calcularValores();
-    }
-
-    // Modal Bootstrap
-    const modalEdicao = new bootstrap.Modal(document.getElementById('modalEdicao'));
-
-    function abrirModalEdicao(indice) {
-      const lancamento = lancamentos[indice];
-      document.getElementById('indiceEdicao').value = indice;
-      document.getElementById('empresaEdicao').value = lancamento.empresa;
-      document.getElementById('dataExecucaoEdicao').value = lancamento.data_execucao;
-      document.getElementById('dataPagamentoEdicao').value = lancamento.data_pagamento;
-      document.getElementById('situacaoEdicao').value = lancamento.situacao;
-      document.getElementById('prestadorEdicao').value = lancamento.prestador;
-      document.getElementById('valorRepasseEdicao').value = lancamento.valor_repasse.toFixed(2);
-      document.getElementById('situacaoRepasseEdicao').value = lancamento.situacao_repasse;
-
-      modalEdicao.show();
-    }
-
-    document.getElementById('formEdicao').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const indice = parseInt(document.getElementById('indiceEdicao').value, 10);
-
-      const empresa = document.getElementById('empresaEdicao').value.trim();
-      const data_execucao = document.getElementById('dataExecucaoEdicao').value;
-      const data_pagamento = document.getElementById('dataPagamentoEdicao').value;
-      const situacao = document.getElementById('situacaoEdicao').value;
-      const prestador = document.getElementById('prestadorEdicao').value;
-      const valor_repasse = parseFloat(document.getElementById('valorRepasseEdicao').value);
-      const situacao_repasse = document.getElementById('situacaoRepasseEdicao').value;
-
-      if (!empresa || !data_execucao || !data_pagamento || !situacao || !prestador || isNaN(valor_repasse)) {
-        alert('Por favor, preencha todos os campos corretamente.');
-        return;
-      }
-
-      lancamentos[indice] = {
-        empresa,
-        data_execucao,
-        data_pagamento,
-        situacao,
-        prestador,
-        valor_repasse,
-        situacao_repasse
-      };
-
-      modalEdicao.hide();
-
-      montarPrestadoresChecklist(); // Atualiza checklist caso prestadores mudem
-      montarTabela(paginaAtual);
-      calcularValores();
+    checkboxes.forEach(cb=>{
+        cb.addEventListener('change',()=>{
+            if(prefiroNao.checked){
+                checkboxes.forEach(c=>{ if(c!==prefiroNao) { c.checked=false; c.disabled=true; toggleSubField(c.id); } });
+            } else {
+                checkboxes.forEach(c=>c.disabled=false);
+                const checked=checkboxes.filter(c=>c.checked && c!==prefiroNao);
+                if(checked.length>=max) checkboxes.forEach(c=>{ if(!c.checked) c.disabled=true; });
+            }
+            if(cb!==prefiroNao && cb.checked) prefiroNao.checked=false;
+        });
     });
+}
 
-    window.onload = () => {
-      montarPrestadoresChecklist();
+controlarGrupo('bebidasGroup',2);
+controlarGrupo('petiscosGroup',2);
+controlarGrupo('docesGroup',2);
 
-      document.getElementById('filtrosForm').addEventListener('submit', aplicarFiltros);
-      document.getElementById('btnLimparFiltros').addEventListener('click', limparFiltros);
+// Envio WhatsApp
+document.getElementById('enviarWhats').addEventListener('click',()=>{
+    document.querySelectorAll('.error').forEach(e=>e.textContent='');
+    document.querySelectorAll('input, textarea').forEach(i=>i.classList.remove('input-error'));
 
-      montarTabela(1);
-      calcularValores();
-    };
-  </script>
+    let valid=true;
 
+    const bebidas=[...document.querySelectorAll('#bebidasGroup input[type="checkbox"]:checked')];
+    if(bebidas.length===0){document.getElementById('bebidasError').textContent='Selecione ao menos uma bebida'; valid=false; document.getElementById('bebidasGroup').querySelectorAll('input').forEach(i=>i.classList.add('input-error'));}
+
+    const petiscos=[...document.querySelectorAll('#petiscosGroup input[type="checkbox"]:checked')];
+    if(petiscos.length===0){document.getElementById('petiscosError').textContent='Selecione ao menos um petisco'; valid=false; document.getElementById('petiscosGroup').querySelectorAll('input').forEach(i=>i.classList.add('input-error'));}
+
+    const doces=[...document.querySelectorAll('#docesGroup input[type="checkbox"]:checked')];
+    if(doces.length===0){document.getElementById('docesError').textContent='Selecione ao menos um doce'; valid=false; document.getElementById('docesGroup').querySelectorAll('input').forEach(i=>i.classList.add('input-error'));}
+
+    // Subcampos obrigatórios
+    if(document.getElementById('refrigerante').checked){
+        const sabor=document.querySelector('#refrigeranteSabor input').value.trim();
+        if(!sabor){document.getElementById('bebidasError').textContent='Informe o sabor do refrigerante'; valid=false; document.getElementById('refrigeranteSabor').querySelector('input').classList.add('input-error');}
+    }
+    if(document.getElementById('suco').checked){
+        const sabor=document.querySelector('#sucoSabor input').value.trim();
+        if(!sabor){document.getElementById('bebidasError').textContent='Informe o sabor do suco'; valid=false; document.querySelector('#sucoSabor input').classList.add('input-error');}
+    }
+    if(document.getElementById('chips').checked){
+        const tipo=document.querySelector('#chipsTipo input').value.trim();
+        if(!tipo){document.getElementById('petiscosError').textContent='Informe o tipo de chips'; valid=false; document.querySelector('#chipsTipo input').classList.add('input-error');}
+    }
+
+    if(!valid) return;
+
+    let msg="*Preferências de Serviço de Bordo:*\n\n";
+    msg+="🥤 Bebidas: "+bebidas.map(b=>{
+        let extra='';
+        if(b.id==='refrigerante') extra=document.querySelector('#refrigeranteSabor input').value.trim();
+        if(b.id==='suco') extra=document.querySelector('#sucoSabor input').value.trim();
+        return extra?`${b.value} (${extra})`:b.value;
+    }).join(', ')+"\n";
+
+    msg+="🥜 Petiscos: "+petiscos.map(p=>{
+        let extra='';
+        if(p.id==='chips') extra=document.querySelector('#chipsTipo input').value.trim();
+        return extra?`${p.value} (${extra})`:p.value;
+    }).join(', ')+"\n";
+
+    msg+="🍬 Doces: "+doces.map(d=>d.value).join(', ')+"\n";
+
+    const obs=document.getElementById('observacoes').value.trim();
+    if(obs) msg+="📝 Observações: "+obs+"\n";
+
+    const whatsapp="5527981283557";
+    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
+});
+</script>
 </body>
 </html>
