@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pesquisa de Satisfação - CR Transporte</title>
+<style>
+  :root{
+    --bg1:#6c757d;
+    --bg2:#495057;
+    --dark:#343a40;
+    --light:#ffffff;
+    --muted:#e0e0e0;
+    --accent:#25D366;
+    --error:#e74c3c;
+  }
+  body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
+    min-height:100vh; padding:20px; display:flex; align-items:center; justify-content:center;
+  }
+  .container{
+    width:100%; max-width:780px; background:#fff; border-radius:16px; overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+  }
+  .header{
+    background:linear-gradient(135deg,var(--dark),var(--bg2));
+    color:#fff; padding:28px; text-align:center;
+  }
+  .header h1{font-size:24px;margin:4px 0 6px}
+  .header p{opacity:.9}
+  .content{padding:26px}
+  .group{margin-bottom:26px}
+  .group > .title{font-weight:700;color:#333;margin-bottom:10px;font-size:16px}
+  .hint{font-size:12px;color:#666;font-style:italic;margin-bottom:8px}
+  .error{color:var(--error);font-size:13px;margin-top:6px}
+  /* Escala 0-10 */
+  .scale{display:flex;flex-wrap:wrap;gap:6px}
+  .scale input{position:absolute;opacity:0;pointer-events:none}
+  .scale label{
+    display:inline-block;padding:8px 10px;min-width:36px;text-align:center;
+    border:2px solid var(--muted);border-radius:999px;cursor:pointer;
+    transition:all .15s ease;font-weight:600;background:#fff;
+  }
+  .scale input:checked + label{border-color:var(--bg2);background:var(--bg2);color:#fff}
+  /* Escolhas tipo chip */
+  .choice{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{position:relative}
+  .chip input{position:absolute;opacity:0}
+  .chip label{
+    display:inline-block;padding:10px 14px;border:2px solid var(--muted);border-radius:999px;
+    cursor:pointer;transition:.15s;background:#fff;font-weight:600
+  }
+  .chip input:checked + label{background:var(--bg2);border-color:var(--bg2);color:#fff}
+  textarea{
+    width:100%;min-height:110px;padding:12px;border:2px solid var(--muted);border-radius:10px;
+    font:inherit;resize:vertical
+  }
+  textarea:focus{outline:none;border-color:var(--bg2)}
+  .preview{background:#fafafa;border:1px dashed #ddd;border-radius:10px;padding:14px;white-space:pre-wrap;
+    font-size:14px;color:#333}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
+  .btn{border:none;border-radius:12px;padding:14px 18px;font-weight:700;cursor:pointer;
+    transition:transform .15s, box-shadow .15s;color:#fff;background:linear-gradient(135deg,var(--dark),var(--bg2))}
+  .btn.whats{background:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Pesquisa de Satisfação</h1>
+      <p>Nos ajude a melhorar sua experiência com a CR Transporte Executivo</p>
+    </div>
+
+    <div class="content">
+      <!-- 1. Em relação ao veículo -->
+      <div class="group" id="g_veiculo">
+        <div class="title">1) Em relação ao veículo</div>
+        <div class="hint">Em uma escala de 0 a 10, onde 0 é totalmente insatisfeito e 10 é totalmente satisfeito.</div>
+        <div class="title">Limpeza</div>
+        <div class="scale" data-name="limpeza"></div>
+        <div class="title" style="margin-top:12px">Conforto</div>
+        <div class="scale" data-name="conforto"></div>
+        <div class="error" id="err_veiculo"></div>
+      </div>
+
+      <!-- 2. Em relação ao motorista -->
+      <div class="group" id="g_motorista">
+        <div class="title">2) Em relação ao motorista</div>
+        <div class="hint">Escala de 0 a 10.</div>
+        <div class="scale" data-name="motorista"></div>
+        <div class="error" id="err_motorista"></div>
+      </div>
+
+      <!-- 3. Horário cumprido (Sim/Não) -->
+      <div class="group" id="g_horario">
+        <div class="title">3) O horário combinado foi cumprido?</div>
+        <div class="choice" data-name="horario">
+          <div class="chip"><input type="radio" id="hora_sim" name="horario" value="Sim"><label for="hora_sim">Sim</label></div>
+          <div class="chip"><input type="radio" id="hora_nao" name="horario" value="Não"><label for="hora_nao">Não</label></div>
+        </div>
+        <div class="error" id="err_horario"></div>
+      </div>
+
+      <!-- 4. Necessidades atendidas (Sim/Não/Parcialmente) -->
+      <div class="group" id="g_necessidades">
+        <div class="title">4) As suas necessidades foram totalmente atendidas?</div>
+        <div class="choice" data-name="necessidades">
+          <div class="chip"><input type="radio" id="nec_sim" name="necessidades" value="Sim"><label for="nec_sim">Sim</label></div>
+          <div class="chip"><input type="radio" id="nec_parc" name="necessidades" value="Parcialmente"><label for="nec_parc">Parcialmente</label></div>
+          <div class="chip"><input type="radio" id="nec_nao" name="necessidades" value="Não"><label for="nec_nao">Não</label></div>
+        </div>
+        <div class="error" id="err_necessidades"></div>
+      </div>
+
+      <!-- 5. Recomendação -->
+      <div class="group" id="g_recomenda">
+        <div class="title">5) Você recomendaria a CR Transporte?</div>
+        <div class="choice" data-name="recomenda">
+          <div class="chip"><input type="radio" id="rec_nao" name="recomenda" value="Não"><label for="rec_nao">Não</label></div>
+          <div class="chip"><input type="radio" id="rec_talvez" name="recomenda" value="Talvez"><label for="rec_talvez">Talvez</label></div>
+          <div class="chip"><input type="radio" id="rec_certeza" name="recomenda" value="Com certeza"><label for="rec_certeza">Com certeza</label></div>
+        </div>
+        <div class="error" id="err_recomenda"></div>
+      </div>
+
+      <!-- Observações -->
+      <div class="group">
+        <div class="title">Observações do atendimento</div>
+        <textarea id="observacoes" placeholder="Escreva livremente... (opcional)"></textarea>
+      </div>
+
+      <!-- Prévia -->
+      <div class="group">
+        <div class="title">Pré-visualização</div>
+        <div class="preview" id="previewBox">Preencha a pesquisa para ver a prévia aqui…</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnPreview">🔎 Atualizar prévia</button>
+        <button class="btn whats" id="btnWhats">📱 Enviar WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Telefone de destino fixo
+  const telefoneCR = "5527981283557";
+
+  // Escalas 0-10
+  document.querySelectorAll('.scale').forEach(wrap=>{
+    const name=wrap.getAttribute('data-name');
+    for(let i=0;i<=10;i++){
+      const id=`${name}_${i}`;
+      const input=document.createElement('input');
+      input.type='radio'; input.name=name; input.id=id; input.value=i;
+      const label=document.createElement('label'); label.setAttribute('for',id); label.textContent=i;
+      wrap.appendChild(input); wrap.appendChild(label);
+    }
+  });
+
+  function getVal(name){
+    const el=document.querySelector(`input[name="${name}"]:checked`);
+    return el?el.value:null;
+  }
+
+  function validate(){
+    document.querySelectorAll('.error').forEach(e=>e.textContent='');
+    let ok=true;
+    if(getVal('limpeza')===null||getVal('conforto')===null)
+      {document.getElementById('err_veiculo').textContent='Selecione opções (0 a 10).';ok=false;}
+    if(getVal('motorista')===null)
+      {document.getElementById('err_motorista').textContent='Selecione uma opção.';ok=false;}
+    if(getVal('horario')===null)
+      {document.getElementById('err_horario').textContent='Selecione uma opção.';ok=false;}
+    if(getVal('necessidades')===null)
+      {document.getElementById('err_necessidades').textContent='Selecione uma opção.';ok=false;}
+    if(getVal('recomenda')===null)
+      {document.getElementById('err_recomenda').textContent='Selecione uma opção.';ok=false;}
+    return ok;
+  }
+
+  function buildMessage(){
+    const limpeza=getVal('limpeza');
+    const conforto=getVal('conforto');
+    const mot=getVal('motorista');
+    const hora=getVal('horario');
+    const ness=getVal('necessidades');
+    const rec=getVal('recomenda');
+    const obs=document.getElementById('observacoes').value.trim();
+
+    let msg=`*Pesquisa de Satisfação - CR Transporte*\n\n`;
+    msg+=`*Escala:* 0 = totalmente insatisfeito | 10 = totalmente satisfeito\n\n`;
+    msg+=`1) Veículo\n• Limpeza: ${limpeza}/10\n• Conforto: ${conforto}/10\n\n`;
+    msg+=`2) Motorista: ${mot}/10\n\n`;
+    msg+=`3) Horário cumprido: ${hora}\n\n`;
+    msg+=`4) Necessidades atendidas: ${ness}\n\n`;
+    msg+=`5) Recomendaria a CR Transporte? ${rec}\n`;
+    if(obs) msg+=`\n📝 Observações:\n${obs}\n`;
+    return msg;
+  }
+
+  function updatePreview(){
+    if(!validate()) return;
+    document.getElementById('previewBox').textContent=buildMessage();
+  }
+
+  document.getElementById('btnPreview').addEventListener('click',e=>{
+    e.preventDefault();updatePreview();
+  });
+
+  document.getElementById('btnWhats').addEventListener('click',e=>{
+    e.preventDefault();if(!validate())return;
+    const msg=buildMessage();
+    window.open(`https://wa.me/${telefoneCR}?text=${encodeURIComponent(msg)}`,'_blank');
+  });
+</script>
+</body>
+</html>
